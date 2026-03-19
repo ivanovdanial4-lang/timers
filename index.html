@@ -73,6 +73,20 @@ select {
 </div>
 
 <br>
+  <!-- Раунды -->
+<select id="roundSelect">
+  <option value="2">2 раунда</option>
+  <option value="3">3 раунда</option>
+  <option value="4">4 раунда</option>
+  <option value="5">5 раундов</option>
+  <option value="6">6 раундов</option>
+  <option value="7">7 раундов</option>
+  <option value="8">8 раундов</option>
+  <option value="9">9 раундов</option>
+  <option value="10">10 раундов</option>
+  <option value="11">11 раундов</option>
+  <option value="12">12 раундов</option>
+</select>
 
 <!-- Язык -->
 <select id="langSelect">
@@ -135,7 +149,7 @@ const translations = {
     colorCyan:"Cyan", colorWhite:"White" },
 
   uk: { round:"Раунд", rest:"Відпочинок", end:"Бій закінчено!",
-    start:"Старт", stop:"Стоп", reset:"скинути",
+    start:"Старт", stop:"Стоп", reset:"Cкинути",
     colorRed:"Червоний", colorGreen:"Зелений", colorYellow:"Жовтий",
     colorCyan:"Блакитний", colorWhite:"Білий" },
 
@@ -281,6 +295,13 @@ langSelect.addEventListener("change", () => {
 // старт
 update();
 updateLanguage();
+  
+  let totalRounds = 5;
+const roundSelect = document.getElementById("roundSelect");
+
+  roundSelect.addEventListener("change", () => {
+  totalRounds = parseInt(roundSelect.value);
+});
 
 </script>
 
