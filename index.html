@@ -257,9 +257,40 @@ function tick() {
 }
 
 // 🚀 СТАРТ (ИСПРАВЛЕНО)
-document.getElementById("start").onclick = async () => {
+document.getElementById("start").onclick = () => {
   initAudio();
-  await audioCtx.resume();
+
+  // НЕ используем await (это важно!)
+  if (audioCtx && audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+
+  if (interval) return;
+
+  clearInterval(interval);
+  interval = null;
+
+  currentRound = 1;
+  isRest = false;
+  seconds = roundTime;
+
+  let prep = 15;
+
+  const prepInterval = setInterval(() => {
+    playBeep(1000, 0.1);
+
+    if (prep > 0) {
+      timerEl.textContent = "00:" + String(prep).padStart(2, '0');
+      prep--;
+    } else {
+      clearInterval(prepInterval);
+
+      playBeep(200, 0.8);
+
+      interval = setInterval(tick, 1000);
+    }
+  }, 1000);
+};
 
   if (interval) return;
 
