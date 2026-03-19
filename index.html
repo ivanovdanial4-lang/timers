@@ -236,7 +236,26 @@ document.getElementById("start").onclick = () => {
   initAudio();
   audioCtx.resume();
 
-  if (!interval) interval = setInterval(tick, 1000);
+  if (interval) return;
+
+  let prep = 15;
+
+  const prepInterval = setInterval(() => {
+    playBeep(1000, 0.1); // быстрый звук
+
+    if (prep > 0) {
+      timerEl.textContent = "00:" + String(prep).padStart(2, '0');
+      prep--;
+    } else {
+      clearInterval(prepInterval);
+
+      // 🔔 стартовый гонг
+      playBeep(200, 0.6);
+
+      // запускаем основной таймер
+      interval = setInterval(tick, 1000);
+    }
+  }, 1000);
 };
 
 document.getElementById("stop").onclick = () => {
