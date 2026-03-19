@@ -33,8 +33,15 @@ button {
   margin:5px;
   padding:10px 20px;
   background:#111;
-  color:white;
+  color:red;
   border:2px solid red;
+  cursor:pointer;
+  box-shadow:0 0 10px red;
+  transition:0.2s;
+}
+
+button:hover {
+  box-shadow:0 0 20px red, 0 0 40px red;
 }
 </style>
 
@@ -51,16 +58,56 @@ button {
   <button id="reset">Сброс</button>
 </div>
 
-<!-- ЗВУКИ -->
-<audio id="gong" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
-<audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+<br>
+
+<!-- Цвета -->
+<div>
+  <button onclick="setColor('red')">Красный</button>
+  <button onclick="setColor('lime')">Зелёный</button>
+  <button onclick="setColor('yellow')">Жёлтый</button>
+  <button onclick="setColor('cyan')">Голубой</button>
+  <button onclick="setColor('white')">Белый</button>
+</div>
 
 <script>
-// настройки
+
+// 🎧 звук (без интернета)
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playBeep(freq, duration) {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.frequency.value = freq;
+  osc.type = "sine";
+
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration);
+}
+
+// 🎨 смена цвета
+function setColor(color) {
+  document.body.style.color = color;
+
+  document.querySelectorAll("button").forEach(btn => {
+    btn.style.borderColor = color;
+    btn.style.boxShadow = `0 0 10px ${color}`;
+    btn.style.color = color;
+  });
+
+  document.getElementById("timer").style.textShadow =
+    `0 0 10px ${color}, 0 0 20px ${color}, 0 0 40px ${color}`;
+}
+
+// ⏱ настройки
 let roundTime = 180;
 let restTime = 60;
-let currentRound = 1;
 let totalRounds = 5;
+
+let currentRound = 1;
 let isRest = false;
 let seconds = roundTime;
 let interval = null;
@@ -68,30 +115,26 @@ let interval = null;
 // элементы
 const timerEl = document.getElementById("timer");
 const roundEl = document.getElementById("round");
-const gong = document.getElementById("gong");
-const beep = document.getElementById("beep");
 
-// разблокировка звука
-function unlockAudio() {
-  gong.play().then(()=>gong.pause());
-  beep.play().then(()=>beep.pause());
-}
-
-// обновление экрана
+// обновление
 function update() {
-  let m = Math.floor(seconds/60);
+  let m = Math.floor(seconds / 60);
   let s = seconds % 60;
-  timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  roundEl.textContent = isRest ? "Отдых" : "Раунд " + currentRound;
+
+  timerEl.textContent =
+    String(m).padStart(2,'0') + ":" + String(s).padStart(2,'0');
+
+  roundEl.textContent = isRest
+    ? "Отдых"
+    : "Раунд " + currentRound;
 }
 
 // таймер
 function tick() {
 
-  // 🔊 бипы последние 10 сек
+  // 🔊 бип последние 10 сек
   if (seconds <= 10 && seconds > 0) {
-    beep.currentTime = 0;
-    beep.play();
+    playBeep(800, 0.1);
   }
 
   if (seconds > 0) {
@@ -99,8 +142,7 @@ function tick() {
   } else {
 
     // 🔔 гонг
-    gong.currentTime = 0;
-    gong.play();
+    playBeep(200, 0.6);
 
     if (!isRest) {
       isRest = true;
@@ -119,9 +161,8 @@ function tick() {
       seconds = roundTime;
     }
 
-    // 🔔 ещё один гонг
-    gong.currentTime = 0;
-    gong.play();
+    // 🔔 начало следующего этапа
+    playBeep(200, 0.6);
   }
 
   update();
@@ -129,7 +170,7 @@ function tick() {
 
 // кнопки
 document.getElementById("start").onclick = () => {
-  unlockAudio(); // важно!
+  audioCtx.resume(); // важно
   if (!interval) interval = setInterval(tick, 1000);
 };
 
