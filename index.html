@@ -262,16 +262,18 @@ function tick() {
 
 // 🚀 СТАРТ (ИСПРАВЛЕНО)
 document.getElementById("start").onclick = () => {
+
   initAudio();
 
-  if (audioCtx && audioCtx.state === "suspended") {
+  if (audioCtx.state === "suspended") {
     audioCtx.resume();
   }
 
-  if (interval) return;
-
-  clearInterval(interval);
-  interval = null;
+  // защита от двойного запуска
+  if (interval) {
+    clearInterval(interval);
+    interval = null;
+  }
 
   currentRound = 1;
   isRest = false;
