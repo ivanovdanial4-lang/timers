@@ -3,330 +3,181 @@
 <head>
 <meta charset="UTF-8">
 <title>Бокс Таймер</title>
-
 <link href="https://fonts.cdnfonts.com/css/ds-digital" rel="stylesheet">
-
 <style>
-body {
-  background:black;
-  color:red;
-  font-family:'DS-Digital', monospace;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-}
-
-#timer {
-  font-size:120px;
-  text-shadow:0 0 20px red;
-}
-
-#round {
-  font-size:50px;
-  margin-bottom:20px;
-}
-
-button {
-  font-size:20px;
-  margin:5px;
-  padding:10px 20px;
-  background:#111;
-  color:red;
-  border:2px solid red;
-  cursor:pointer;
-  box-shadow:0 0 10px red;
-}
-
-select {
-  font-size:18px;
-  margin-top:10px;
-  background:#111;
-  color:white;
-  border:2px solid red;
-}
+    body {
+        background: black;
+        color: red;
+        font-family: 'DS-Digital', sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    #timer { font-size: 120px; text-shadow: 0 0 20px red; }
+    #round { font-size: 50px; margin-bottom: 20px; }
+    button {
+        font-size: 20px; margin: 5px; padding: 10px 20px;
+        background: #111; color: red; border: 2px solid red;
+        cursor: pointer; box-shadow: 0 0 10px red;
+    }
+    select {
+        font-size: 18px; margin-top: 10px;
+        background: #111; color: white; border: 2px solid red;
+    }
 </style>
-
 </head>
-
 <body>
 
 <div id="round">Раунд 1</div>
 <div id="timer">03:00</div>
 
 <div>
-  <button id="start">Старт</button>
-  <button id="stop">Стоп</button>
-  <button id="reset">Сброс</button>
+    <button id="start">Старт</button>
+    <button id="stop">Стоп</button>
+    <button id="reset">Сброс</button>
 </div>
 
 <br>
-
-<!-- Цвет -->
 <div>
-  <button id="btnRed" onclick="setColor('red')">Красный</button>
-  <button id="btnGreen" onclick="setColor('lime')">Зелёный</button>
-  <button id="btnYellow" onclick="setColor('yellow')">Жёлтый</button>
-  <button id="btnCyan" onclick="setColor('cyan')">Голубой</button>
-  <button id="btnWhite" onclick="setColor('white')">Белый</button>
+    <button id="btnRed" onclick="setColor('red')">Красный</button>
+    <button id="btnGreen" onclick="setColor('lime')">Зелёный</button>
+    <button id="btnYellow" onclick="setColor('yellow')">Жёлтый</button>
+    <button id="btnCyan" onclick="setColor('cyan')">Голубой</button>
+    <button id="btnWhite" onclick="setColor('white')">Белый</button>
 </div>
 
 <br>
-  <!-- Раунды -->
 <select id="roundSelect">
-  <option value="2">2 раунда</option>
-  <option value="3">3 раунда</option>
-  <option value="4">4 раунда</option>
-  <option value="5">5 раундов</option>
-  <option value="6">6 раундов</option>
-  <option value="7">7 раундов</option>
-  <option value="8">8 раундов</option>
-  <option value="9">9 раундов</option>
-  <option value="10">10 раундов</option>
-  <option value="11">11 раундов</option>
-  <option value="12">12 раундов</option>
+    <option value="2">2 раунда</option>
+    <option value="3">3 раунда</option>
+    <option value="5" selected>5 раундов</option>
+    <option value="12">12 раундов</option>
 </select>
 
-<!-- Язык -->
 <select id="langSelect">
-  <option value="ru">Русский</option>
-  <option value="en">English</option>
-  <option value="uk">Українська</option>
-  <option value="cs">Čeština</option>
-  <option value="pl">Polski</option>
+    <option value="ru">Русский</option>
+    <option value="en">English</option>
 </select>
 
 <script>
-  
-  document.addEventListener("click", () => {
-  initAudio();
-});
-
-// 🎧 звук
 let audioCtx;
-
-function initAudio() {
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-}
-
-function playBeep(freq, duration) {
-  if (!audioCtx) return;
-
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-
-  osc.frequency.value = freq;
-  osc.type = "sine";
-
-  osc.start();
-  osc.stop(audioCtx.currentTime + duration);
-}
-
-// 🎨 цвет
-function setColor(color) {
-  document.body.style.color = color;
-
-  document.querySelectorAll("button").forEach(btn => {
-    btn.style.borderColor = color;
-    btn.style.color = color;
-    btn.style.boxShadow = `0 0 10px ${color}`;
-  });
-
-  document.getElementById("timer").style.textShadow =
-    `0 0 10px ${color}, 0 0 20px ${color}, 0 0 40px ${color}`;
-}
-
-// 🌍 переводы
-const translations = {
-  ru: { round:"Раунд", rest:"Отдых", end:"Бой окончен!",
-    start:"Старт", stop:"Стоп", reset:"Сброс",
-    colorRed:"Красный", colorGreen:"Зелёный", colorYellow:"Жёлтый",
-    colorCyan:"Голубой", colorWhite:"Белый" },
-
-  en: { round:"Round", rest:"Rest", end:"Fight over!",
-    start:"Start", stop:"Stop", reset:"Reset",
-    colorRed:"Red", colorGreen:"Green", colorYellow:"Yellow",
-    colorCyan:"Cyan", colorWhite:"White" },
-
-  uk: { round:"Раунд", rest:"Відпочинок", end:"Бій закінчено!",
-    start:"Старт", stop:"Стоп", reset:"Скидання",
-    colorRed:"Червоний", colorGreen:"Зелений", colorYellow:"Жовтий",
-    colorCyan:"Блакитний", colorWhite:"Білий" },
-
-  cs: { round:"Kolo", rest:"Odpočinek", end:"Konec zápasu!",
-    start:"Start", stop:"Stop", reset:"Reset",
-    colorRed:"Červená", colorGreen:"Zelená", colorYellow:"Žlutá",
-    colorCyan:"Azurová", colorWhite:"Bílá" },
-
-  pl: { round:"Runda", rest:"Przerwa", end:"Koniec walki!",
-    start:"Start", stop:"Stop", reset:"Reset",
-    colorRed:"Czerwony", colorGreen:"Zielony", colorYellow:"Żółty",
-    colorCyan:"Błękitny", colorWhite:"Biały" }
-};
-
-// ⏱ настройки
 let roundTime = 180;
 let restTime = 60;
+let prepTime = 15;
 
 let totalRounds = 5;
 let currentRound = 1;
-let isRest = false;
 let seconds = roundTime;
 let interval = null;
+let state = "idle"; // idle, prep, work, rest
 
-// элементы
 const timerEl = document.getElementById("timer");
 const roundEl = document.getElementById("round");
 const langSelect = document.getElementById("langSelect");
 const roundSelect = document.getElementById("roundSelect");
 
-// выбор раундов
-roundSelect.addEventListener("change", () => {
-  totalRounds = parseInt(roundSelect.value);
-  currentRound = 1;
-  update();
-});
+const translations = {
+    ru: { round:"Раунд", rest:"Отдых", prep:"Подготовка", end:"Бой окончен!", start:"Старт", stop:"Стоп", reset:"Сброс" },
+    en: { round:"Round", rest:"Rest", prep:"Prepare", end:"Fight over!", start:"Start", stop:"Stop", reset:"Reset" }
+};
 
-// обновление времени
+function initAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function playBeep(freq, duration) {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.frequency.value = freq;
+    osc.start(); osc.stop(audioCtx.currentTime + duration);
+}
+
+function setColor(color) {
+    document.body.style.color = color;
+    document.querySelectorAll("button").forEach(btn => {
+        btn.style.borderColor = color;
+        btn.style.color = color;
+        btn.style.boxShadow = `0 0 10px ${color}`;
+    });
+    timerEl.style.textShadow = `0 0 20px ${color}`;
+}
+
 function update() {
-  let m = Math.floor(seconds / 60);
-  let s = seconds % 60;
-
-  timerEl.textContent =
-    String(m).padStart(2,'0') + ":" + String(s).padStart(2,'0');
-
-  const t = translations[langSelect.value];
-
-  roundEl.textContent = isRest
-    ? `${t.rest} ${currentRound}`
-    : `${t.round} ${currentRound}`;
+    let m = Math.floor(seconds / 60);
+    let s = seconds % 60;
+    timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    
+    const t = translations[langSelect.value];
+    if (state === "prep") roundEl.textContent = t.prep;
+    else if (state === "rest") roundEl.textContent = `${t.rest} ${currentRound}`;
+    else if (state === "work") roundEl.textContent = `${t.round} ${currentRound}`;
 }
 
-// обновление языка
-function updateLanguage() {
-  const t = translations[langSelect.value];
-
-  document.getElementById("start").textContent = t.start;
-  document.getElementById("stop").textContent = t.stop;
-  document.getElementById("reset").textContent = t.reset;
-
-  document.getElementById("btnRed").textContent = t.colorRed;
-  document.getElementById("btnGreen").textContent = t.colorGreen;
-  document.getElementById("btnYellow").textContent = t.colorYellow;
-  document.getElementById("btnCyan").textContent = t.colorCyan;
-  document.getElementById("btnWhite").textContent = t.colorWhite;
-}
-
-// таймер
 function tick() {
-
-  if (seconds <= 10 && seconds > 0) {
-    playBeep(800, 0.1);
-  }
-
-  if (seconds > 0) {
-    seconds--;
-  } else {
-
-    playBeep(200, 0.5);
-
-    if (!isRest) {
-      isRest = true;
-      seconds = restTime;
+    if (seconds > 0) {
+        seconds--;
+        if (seconds < 3 && seconds >= 0) playBeep(800, 0.1); // Писк в конце
     } else {
-      isRest = false;
-      currentRound++;
-
-      if (currentRound > totalRounds) {
-        clearInterval(interval);
-        interval = null;
-        timerEl.textContent = "00:00";
-        roundEl.textContent = translations[langSelect.value].end;
-        return;
-      }
-
-      seconds = roundTime;
+        playBeep(200, 0.5); // Гонг
+        
+        if (state === "prep") {
+            state = "work";
+            seconds = roundTime;
+        } else if (state === "work") {
+            if (currentRound >= totalRounds) {
+                clearInterval(interval);
+                interval = null;
+                state = "idle";
+                roundEl.textContent = translations[langSelect.value].end;
+                return;
+            }
+            state = "rest";
+            seconds = restTime;
+        } else if (state === "rest") {
+            state = "work";
+            currentRound++;
+            seconds = roundTime;
+        }
     }
-
-    playBeep(200, 0.5);
-  }
-
-  update();
+    update();
 }
 
-// 🚀 СТАРТ (ИСПРАВЛЕНО)
 document.getElementById("start").onclick = () => {
+    initAudio();
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    if (interval) return; // Если уже запущен, ничего не делать
 
-  // звук
-  initAudio();
-  if (audioCtx.state === "suspended") {
-    audioCtx.resume();
-  }
-
-  // ВСЕГДА очищаем всё
-  clearInterval(interval);
-  interval = null;
-
-  // сброс состояния
-  currentRound = 1;
-  isRest = false;
-  seconds = roundTime;
-
-  // старт 15 секунд
-  let prep = 15;
-
-  const prepInterval = setInterval(() => {
-    playBeep(1000, 0.1);
-
-    timerEl.textContent = "00:" + String(prep).padStart(2, '0');
-
-    prep--;
-
-    if (prep < 0) {
-      clearInterval(prepInterval);
-
-      playBeep(200, 0.8);
-
-      // запуск таймера
-      interval = setInterval(tick, 1000);
+    if (state === "idle") {
+        state = "prep";
+        seconds = prepTime;
+        currentRound = 1;
     }
-
-  }, 1000);
+    interval = setInterval(tick, 1000);
 };
-  
-// стоп
+
 document.getElementById("stop").onclick = () => {
-  clearInterval(interval);
-  interval = null;
+    clearInterval(interval);
+    interval = null;
 };
 
-// сброс
 document.getElementById("reset").onclick = () => {
-  clearInterval(interval);
-  interval = null;
-
-  currentRound = 1;
-  isRest = false;
-  seconds = roundTime;
-
-  update();
+    clearInterval(interval);
+    interval = null;
+    state = "idle";
+    currentRound = 1;
+    seconds = roundTime;
+    update();
 };
 
-// язык
-langSelect.addEventListener("change", () => {
-  update();
-  updateLanguage();
-});
+roundSelect.onchange = () => { totalRounds = parseInt(roundSelect.value); };
+langSelect.onchange = () => { update(); };
 
-// старт
 update();
-updateLanguage();
-  
+</script>
 </body>
 </html>
