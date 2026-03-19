@@ -263,37 +263,40 @@ function tick() {
 // 🚀 СТАРТ (ИСПРАВЛЕНО)
 document.getElementById("start").onclick = () => {
 
+  // звук
   initAudio();
-
   if (audioCtx.state === "suspended") {
     audioCtx.resume();
   }
 
-  // защита от двойного запуска
-  if (interval) {
-    clearInterval(interval);
-    interval = null;
-  }
+  // ВСЕГДА очищаем всё
+  clearInterval(interval);
+  interval = null;
 
+  // сброс состояния
   currentRound = 1;
   isRest = false;
   seconds = roundTime;
 
+  // старт 15 секунд
   let prep = 15;
 
   const prepInterval = setInterval(() => {
     playBeep(1000, 0.1);
 
-    if (prep > 0) {
-      timerEl.textContent = "00:" + String(prep).padStart(2, '0');
-      prep--;
-    } else {
+    timerEl.textContent = "00:" + String(prep).padStart(2, '0');
+
+    prep--;
+
+    if (prep < 0) {
       clearInterval(prepInterval);
 
       playBeep(200, 0.8);
 
+      // запуск таймера
       interval = setInterval(tick, 1000);
     }
+
   }, 1000);
 };
   
