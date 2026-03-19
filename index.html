@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Бокс Таймер By Danilevskij</title>
+<link href="https://fonts.cdnfonts.com/css/ds-digital" rel="stylesheet">
+<style>
+  body {
+    background-color: black;
+    font-family: 'DS-Digital', monospace;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: red;
+  }
+  #timer {
+    font-size: 120px;
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 40px currentColor;
+  }
+  #round {
+    font-size: 50px;
+    margin-bottom: 20px;
+  }
+  button {
+    font-size: 20px;
+    margin: 5px;
+    padding: 8px 16px;
+    background-color: #111;
+    color: white;
+    border: 2px solid red;
+    cursor: pointer;
+    box-shadow: 0 0 5px red;
+    transition: all 0.2s;
+  }
+  button:hover, button:active {
+    box-shadow: 0 0 20px red, 0 0 40px red;
+    color: red;
+  }
+  #settingsBtn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    border: 2px solid red;
+    color: white;
+    box-shadow: 0 0 5px red;
+  }
+  #settingsPanel {
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    background-color: #111;
+    border: 2px solid #555;
+    padding: 10px;
+    display: none;
+    flex-direction: column;
+    color: white;
+  }
+  select {
+    font-size: 18px;
+    margin: 5px 0;
+  }
+</style>
+</head>
+<body>
+
+<button id="settingsBtn">⚙ Настройки</button>
+
+<div id="settingsPanel">
+  <label id="roundsLabel">Раунды: 
+    <select id="roundsSelect">
+      <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+      <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+    </select>
+  </label>
+  <label id="colorLabel">Цвет цифр: 
+    <select id="colorSelect">
+      <option value="red">Красный</option>
+      <option value="#00FF00">Зелёный</option>
+      <option value="yellow">Жёлтый</option>
+      <option value="blue">Синий</option>
+      <option value="cyan">Голубой</option>
+      <option value="white">Белый</option>
+      <option value="#FF66FF">Фиолетовый</option>
+    </select>
+  </label>
+  <label id="langLabel">Язык: 
+    <select id="langSelect">
+      <option value="ru">Русский</option>
+      <option value="en">English</option>
+      <option value="uk">Українська</option>
+      <option value="cs">Čeština</option>
+      <option value="pl">Polski</option>
+    </select>
+  </label>
+</div>
+
+<div id="round">Раунд 1</div>
+<div id="timer">03:00</div>
+<div>
+  <button id="startBtn">Старт</button>
+  <button id="stopBtn">Стоп</button>
+  <button id="resetBtn">Сброс</button>
+</div>
+
+<audio id="gong" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" preload="auto"></audio>
+
+<script>
+let roundTime = 3 * 60;
+let restTime = 1 * 60;
+let roundsTotal = 5;
+let currentRound = 1;
+let isRest = false;
+let seconds = roundTime;
+let interval = null;
+
+const timerElement = document.getElementById("timer");
+const roundElement = document.getElementById("round");
+const gong = document.getElementById("gong");
+const settingsBtn = document.getElementById("settingsBtn");
+const settingsPanel = document.getElementById("settingsPanel");
+const roundsSelect = document.getElementById("roundsSelect");
+const colorSelect = document.getElementById("colorSelect");
+const langSelect = document.getElementById("langSelect");
+const startBtn = document.getElementById("startBtn");
+const stopBtn = document.getElementById("stopBtn");
+const resetBtn = document.getElementById("resetBtn");
+const roundsLabel = document.getElementById("roundsLabel");
+const colorLabel = document.getElementById("colorLabel");
+const langLabel = document.getElementById("langLabel");
+
+// Переводы
+const translations = {
+  ru: { round:"Раунд", rest:"Отдых", finished:"Бой окончен!", start:"Старт", stop:"Стоп", reset:"Сброс", roundsLabel:"Раунды:", colorLabel:"Цвет цифр:", langLabel:"Язык:" },
+  en: { round:"Round", rest:"Rest", finished:"Fight over!", start:"Start", stop:"Stop", reset:"Reset", roundsLabel:"Rounds:", colorLabel:"Digit color:", langLabel:"Language:" },
+  uk: { round:"Раунд", rest:"Відпочинок", finished:"Бій закінчено!", start:"Старт", stop:"Стоп", reset:"Скидання", roundsLabel:"Раунди:", colorLabel:"Колір цифр:", langLabel:"Мова:" },
+  cs: { round:"Kolo", rest:"Odpočinek", finished:"Konec zápasu!", start:"Start", stop:"Stop", reset:"Reset", roundsLabel:"Kola:", colorLabel:"Barva číslic:", langLabel:"Jazyk:" },
+  pl: { round:"Runda", rest:"Przerwa", finished:"Koniec walki!", start:"Start", stop:"Stop", reset:"Reset", roundsLabel:"Rundy:", colorLabel:"Kolor cyfr:", langLabel:"Język:" }
+};
+
+// Обновление дисплея
+function updateDisplay() {
+  let min = Math.floor(seconds / 60);
+  let sec = seconds % 60;
+  timerElement.textContent = String(min).padStart(2,'0') + ":" + String(sec).padStart(2,'0');
+  const lang = langSelect.value;
+  roundElement.textContent = isRest ? `${translations[lang].rest} ${currentRound}` : `${translations[lang].round} ${currentRound}`;
+}
+
+// Таймер
+function tick() {
+  if (seconds > 0) {
+    seconds--;
+    updateDisplay();
+  } else {
+    gong.play();
+    if (!isRest) {
+      isRest = true;
+      seconds = restTime;
+    } else {
+      isRest = false;
+      currentRound++;
+      if (currentRound > roundsTotal) {
+        clearInterval(interval);
+        const lang = langSelect.value;
+        timerElement.textContent = "00:00";
+        roundElement.textContent = translations[lang].finished;
+        return;
+      }
+      seconds = roundTime;
+    }
+    updateDisplay();
+  }
+}
+
+// Кнопки управления
+startBtn.addEventListener("click", () => { if (!interval) interval = setInterval(tick, 1000); });
+stopBtn.addEventListener("click", () => { clearInterval(interval); interval = null; });
+resetBtn.addEventListener("click", () => {
+  clearInterval(interval);
+  interval = null;
+  currentRound = 1;
+  isRest = false;
+  seconds = roundTime;
+  updateDisplay();
+});
+
+// Настройки
+settingsBtn.addEventListener("click", () => {
+  settingsPanel.style.display = settingsPanel.style.display === "flex" ? "none" : "flex";
+});
+
+roundsSelect.addEventListener("change", () => { roundsTotal = parseInt(roundsSelect.value); });
+
+colorSelect.addEventListener("change", () => {
+  document.body.style.color = colorSelect.value;
+  timerElement.style.textShadow = `0 0 10px ${colorSelect.value}, 0 0 20px ${colorSelect.value}, 0 0 40px ${colorSelect.value}`;
+});
+
+langSelect.addEventListener("change", () => {
+  const lang = langSelect.value;
+  startBtn.textContent = translations[lang].start;
+  stopBtn.textContent = translations[lang].stop;
+  resetBtn.textContent = translations[lang].reset;
+  roundsLabel.textContent = translations[lang].roundsLabel;
+  colorLabel.textContent = translations[lang].colorLabel;
+  langLabel.textContent = translations[lang].langLabel;
+  updateDisplay();
+});
+
+updateDisplay();
+</script>
+
+</body>
+</html>
