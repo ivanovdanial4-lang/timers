@@ -109,6 +109,8 @@ function initAudio() {
 }
 
 function playBeep(freq, duration) {
+  if (!audioCtx) return;
+
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
 
@@ -183,6 +185,8 @@ const roundSelect = document.getElementById("roundSelect");
 // выбор раундов
 roundSelect.addEventListener("change", () => {
   totalRounds = parseInt(roundSelect.value);
+  currentRound = 1;
+  update();
 });
 
 // обновление времени
@@ -218,7 +222,6 @@ function updateLanguage() {
 // таймер
 function tick() {
 
-  // звук в последние 10 секунд
   if (seconds <= 10 && seconds > 0) {
     playBeep(800, 0.1);
   }
@@ -238,6 +241,7 @@ function tick() {
 
       if (currentRound > totalRounds) {
         clearInterval(interval);
+        interval = null;
         timerEl.textContent = "00:00";
         roundEl.textContent = translations[langSelect.value].end;
         return;
@@ -252,12 +256,19 @@ function tick() {
   update();
 }
 
-// старт с 15 сек
-document.getElementById("start").onclick = () => {
+// 🚀 СТАРТ (ИСПРАВЛЕНО)
+document.getElementById("start").onclick = async () => {
   initAudio();
-  audioCtx.resume();
+  await audioCtx.resume();
 
   if (interval) return;
+
+  clearInterval(interval);
+  interval = null;
+
+  currentRound = 1;
+  isRest = false;
+  seconds = roundTime;
 
   let prep = 15;
 
@@ -270,7 +281,7 @@ document.getElementById("start").onclick = () => {
     } else {
       clearInterval(prepInterval);
 
-      playBeep(200, 0.6);
+      playBeep(200, 0.8);
 
       interval = setInterval(tick, 1000);
     }
@@ -287,9 +298,11 @@ document.getElementById("stop").onclick = () => {
 document.getElementById("reset").onclick = () => {
   clearInterval(interval);
   interval = null;
+
   currentRound = 1;
   isRest = false;
   seconds = roundTime;
+
   update();
 };
 
@@ -297,7 +310,7 @@ document.getElementById("reset").onclick = () => {
 langSelect.addEventListener("change", () => {
   update();
   updateLanguage();
-}); 
+});
 
 // старт
 update();
