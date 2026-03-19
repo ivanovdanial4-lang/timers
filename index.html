@@ -149,7 +149,7 @@ const translations = {
     colorCyan:"Cyan", colorWhite:"White" },
 
   uk: { round:"Раунд", rest:"Відпочинок", end:"Бій закінчено!",
-    start:"Старт", stop:"Стоп", reset:"Cкинути",
+    start:"Старт", stop:"Стоп", reset:"Скидання",
     colorRed:"Червоний", colorGreen:"Зелений", colorYellow:"Жовтий",
     colorCyan:"Блакитний", colorWhite:"Білий" },
 
@@ -167,8 +167,8 @@ const translations = {
 // ⏱ настройки
 let roundTime = 180;
 let restTime = 60;
-let totalRounds = 5;
 
+let totalRounds = 5;
 let currentRound = 1;
 let isRest = false;
 let seconds = roundTime;
@@ -178,6 +178,12 @@ let interval = null;
 const timerEl = document.getElementById("timer");
 const roundEl = document.getElementById("round");
 const langSelect = document.getElementById("langSelect");
+const roundSelect = document.getElementById("roundSelect");
+
+// выбор раундов
+roundSelect.addEventListener("change", () => {
+  totalRounds = parseInt(roundSelect.value);
+});
 
 // обновление времени
 function update() {
@@ -194,7 +200,7 @@ function update() {
     : `${t.round} ${currentRound}`;
 }
 
-// обновление языка кнопок
+// обновление языка
 function updateLanguage() {
   const t = translations[langSelect.value];
 
@@ -212,6 +218,7 @@ function updateLanguage() {
 // таймер
 function tick() {
 
+  // звук в последние 10 секунд
   if (seconds <= 10 && seconds > 0) {
     playBeep(800, 0.1);
   }
@@ -245,7 +252,7 @@ function tick() {
   update();
 }
 
-// кнопки
+// старт с 15 сек
 document.getElementById("start").onclick = () => {
   initAudio();
   audioCtx.resume();
@@ -255,7 +262,7 @@ document.getElementById("start").onclick = () => {
   let prep = 15;
 
   const prepInterval = setInterval(() => {
-    playBeep(1000, 0.1); // быстрый звук
+    playBeep(1000, 0.1);
 
     if (prep > 0) {
       timerEl.textContent = "00:" + String(prep).padStart(2, '0');
@@ -263,20 +270,20 @@ document.getElementById("start").onclick = () => {
     } else {
       clearInterval(prepInterval);
 
-      // 🔔 стартовый гонг
       playBeep(200, 0.6);
 
-      // запускаем основной таймер
       interval = setInterval(tick, 1000);
     }
   }, 1000);
 };
 
+// стоп
 document.getElementById("stop").onclick = () => {
   clearInterval(interval);
   interval = null;
 };
 
+// сброс
 document.getElementById("reset").onclick = () => {
   clearInterval(interval);
   interval = null;
@@ -286,7 +293,7 @@ document.getElementById("reset").onclick = () => {
   update();
 };
 
-// язык (ИСПРАВЛЕНО!)
+// язык
 langSelect.addEventListener("change", () => {
   update();
   updateLanguage();
@@ -295,22 +302,8 @@ langSelect.addEventListener("change", () => {
 // старт
 update();
 updateLanguage();
+
+  <script>
   
-// сначала объявляешь переменные
-let totalRounds = 5;
-
-// потом получаешь элементы
-const roundSelect = document.getElementById("roundSelect");
-
-// потом функции
-function update() {}
-
-// и только потом обработчики
-roundSelect.addEventListener("change", () => {
-  totalRounds = parseInt(roundSelect.value);
-});
-
-</script>
-
 </body>
 </html>
