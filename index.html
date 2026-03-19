@@ -1,78 +1,10 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<title>Бокс Таймер</title>
+let audioCtx;
 
-<link href="https://fonts.cdnfonts.com/css/ds-digital" rel="stylesheet">
-
-<style>
-body {
-  background:black;
-  color:red;
-  font-family:'DS-Digital', monospace;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
 }
-
-#timer {
-  font-size:120px;
-  text-shadow:0 0 20px red;
-}
-
-#round {
-  font-size:50px;
-  margin-bottom:20px;
-}
-
-button {
-  font-size:20px;
-  margin:5px;
-  padding:10px 20px;
-  background:#111;
-  color:red;
-  border:2px solid red;
-  cursor:pointer;
-  box-shadow:0 0 10px red;
-  transition:0.2s;
-}
-
-button:hover {
-  box-shadow:0 0 20px red, 0 0 40px red;
-}
-</style>
-
-</head>
-
-<body>
-
-<div id="round">Раунд 1</div>
-<div id="timer">03:00</div>
-
-<div>
-  <button id="start">Старт</button>
-  <button id="stop">Стоп</button>
-  <button id="reset">Сброс</button>
-</div>
-
-<br>
-
-<!-- Цвета -->
-<div>
-  <button onclick="setColor('red')">Красный</button>
-  <button onclick="setColor('lime')">Зелёный</button>
-  <button onclick="setColor('yellow')">Жёлтый</button>
-  <button onclick="setColor('cyan')">Голубой</button>
-  <button onclick="setColor('white')">Белый</button>
-</div>
-
-<script>
-
-// 🎧 звук (без интернета)
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 function playBeep(freq, duration) {
   const osc = audioCtx.createOscillator();
@@ -88,19 +20,28 @@ function playBeep(freq, duration) {
   osc.stop(audioCtx.currentTime + duration);
 }
 
-// 🎨 смена цвета
+// 🎨 ИСПРАВЛЕННАЯ смена цвета
 function setColor(color) {
   document.body.style.color = color;
 
   document.querySelectorAll("button").forEach(btn => {
     btn.style.borderColor = color;
-    btn.style.boxShadow = `0 0 10px ${color}`;
     btn.style.color = color;
+    btn.style.boxShadow = `0 0 10px ${color}`;
   });
 
   document.getElementById("timer").style.textShadow =
     `0 0 10px ${color}, 0 0 20px ${color}, 0 0 40px ${color}`;
 }
+
+// 🌍 переводы
+const translations = {
+  ru: { round:"Раунд", rest:"Отдых", end:"Бой окончен!" },
+  en: { round:"Round", rest:"Rest", end:"Fight over!" },
+  uk: { round:"Раунд", rest:"Відпочинок", end:"Бій закінчено!" },
+  cs: { round:"Kolo", rest:"Odpočinek", end:"Konec zápasu!" },
+  pl: { round:"Runda", rest:"Przerwa", end:"Koniec walki!" }
+};
 
 // ⏱ настройки
 let roundTime = 180;
@@ -115,6 +56,7 @@ let interval = null;
 // элементы
 const timerEl = document.getElementById("timer");
 const roundEl = document.getElementById("round");
+const langSelect = document.getElementById("langSelect");
 
 // обновление
 function update() {
@@ -124,15 +66,16 @@ function update() {
   timerEl.textContent =
     String(m).padStart(2,'0') + ":" + String(s).padStart(2,'0');
 
+  const t = translations[langSelect.value];
+
   roundEl.textContent = isRest
-    ? "Отдых"
-    : "Раунд " + currentRound;
+    ? `${t.rest} ${currentRound}`
+    : `${t.round} ${currentRound}`;
 }
 
 // таймер
 function tick() {
 
-  // 🔊 бип последние 10 сек
   if (seconds <= 10 && seconds > 0) {
     playBeep(800, 0.1);
   }
@@ -141,8 +84,7 @@ function tick() {
     seconds--;
   } else {
 
-    // 🔔 гонг
-    playBeep(200, 0.6);
+    playBeep(200, 0.5);
 
     if (!isRest) {
       isRest = true;
@@ -154,15 +96,14 @@ function tick() {
       if (currentRound > totalRounds) {
         clearInterval(interval);
         timerEl.textContent = "00:00";
-        roundEl.textContent = "Бой окончен!";
+        roundEl.textContent = translations[langSelect.value].end;
         return;
       }
 
       seconds = roundTime;
     }
 
-    // 🔔 начало следующего этапа
-    playBeep(200, 0.6);
+    playBeep(200, 0.5);
   }
 
   update();
@@ -170,7 +111,9 @@ function tick() {
 
 // кнопки
 document.getElementById("start").onclick = () => {
-  audioCtx.resume(); // важно
+  initAudio(); // 🔥 ВАЖНО
+  audioCtx.resume();
+
   if (!interval) interval = setInterval(tick, 1000);
 };
 
@@ -188,9 +131,6 @@ document.getElementById("reset").onclick = () => {
   update();
 };
 
+langSelect.onchange = update;
+
 update();
-
-</script>
-
-</body>
-</html>
