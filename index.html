@@ -2,146 +2,93 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Бокс Таймер By Danilevskij</title>
+<title>Бокс Таймер</title>
+
 <link href="https://fonts.cdnfonts.com/css/ds-digital" rel="stylesheet">
 
 <style>
-  body {
-    background-color: black;
-    font-family: 'DS-Digital', monospace;
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: red;
-  }
-  #timer {
-    font-size: 120px;
-    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 40px currentColor;
-  }
-  #round {
-    font-size: 50px;
-    margin-bottom: 20px;
-  }
-  button {
-    font-size: 20px;
-    margin: 5px;
-    padding: 8px 16px;
-    background-color: #111;
-    color: white;
-    border: 2px solid red;
-    cursor: pointer;
-    box-shadow: 0 0 5px red;
-    transition: all 0.2s;
-  }
-  button:hover {
-    box-shadow: 0 0 20px red, 0 0 40px red;
-    color: red;
-  }
-  #settingsBtn {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-  }
-  #settingsPanel {
-    position: absolute;
-    top: 50px;
-    left: 10px;
-    background-color: #111;
-    border: 2px solid #555;
-    padding: 10px;
-    display: none;
-    flex-direction: column;
-    color: white;
-  }
+body {
+  background:black;
+  color:red;
+  font-family:'DS-Digital', monospace;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+#timer {
+  font-size:120px;
+  text-shadow:0 0 20px red;
+}
+
+#round {
+  font-size:50px;
+  margin-bottom:20px;
+}
+
+button {
+  font-size:20px;
+  margin:5px;
+  padding:10px 20px;
+  background:#111;
+  color:white;
+  border:2px solid red;
+}
 </style>
+
 </head>
 
 <body>
-
-<button id="settingsBtn">⚙ Настройки</button>
-
-<div id="settingsPanel">
-  <label>Раунды:
-    <select id="roundsSelect">
-      <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-      <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
-    </select>
-  </label>
-
-  <label>Цвет:
-    <select id="colorSelect">
-      <option value="red">Красный</option>
-      <option value="green">Зелёный</option>
-      <option value="yellow">Жёлтый</option>
-      <option value="blue">Синий</option>
-      <option value="white">Белый</option>
-    </select>
-  </label>
-
-  <label>Язык:
-    <select id="langSelect">
-      <option value="ru">Русский</option>
-      <option value="en">English</option>
-    </select>
-  </label>
-</div>
 
 <div id="round">Раунд 1</div>
 <div id="timer">03:00</div>
 
 <div>
-  <button id="startBtn">Старт</button>
-  <button id="stopBtn">Стоп</button>
-  <button id="resetBtn">Сброс</button>
+  <button id="start">Старт</button>
+  <button id="stop">Стоп</button>
+  <button id="reset">Сброс</button>
 </div>
 
-<audio id="gong" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
-<audio id="beep" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+<!-- ЗВУКИ -->
+<audio id="gong" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
+<audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
 
 <script>
-let roundTime = 3 * 60;
-let restTime = 1 * 60;
-let roundsTotal = 5;
+// настройки
+let roundTime = 180;
+let restTime = 60;
 let currentRound = 1;
+let totalRounds = 5;
 let isRest = false;
 let seconds = roundTime;
 let interval = null;
 
-const timerElement = document.getElementById("timer");
-const roundElement = document.getElementById("round");
+// элементы
+const timerEl = document.getElementById("timer");
+const roundEl = document.getElementById("round");
 const gong = document.getElementById("gong");
 const beep = document.getElementById("beep");
 
-const roundsSelect = document.getElementById("roundsSelect");
-const colorSelect = document.getElementById("colorSelect");
-const langSelect = document.getElementById("langSelect");
-
-const startBtn = document.getElementById("startBtn");
-const stopBtn = document.getElementById("stopBtn");
-const resetBtn = document.getElementById("resetBtn");
-
-const translations = {
-  ru: { round:"Раунд", rest:"Отдых", finished:"Бой окончен!", start:"Старт", stop:"Стоп", reset:"Сброс" },
-  en: { round:"Round", rest:"Rest", finished:"Fight over!", start:"Start", stop:"Stop", reset:"Reset" }
-};
-
-function updateDisplay() {
-  let min = Math.floor(seconds / 60);
-  let sec = seconds % 60;
-  timerElement.textContent =
-    String(min).padStart(2,'0') + ":" + String(sec).padStart(2,'0');
-
-  const lang = langSelect.value;
-  roundElement.textContent = isRest
-    ? translations[lang].rest + " " + currentRound
-    : translations[lang].round + " " + currentRound;
+// разблокировка звука
+function unlockAudio() {
+  gong.play().then(()=>gong.pause());
+  beep.play().then(()=>beep.pause());
 }
 
+// обновление экрана
+function update() {
+  let m = Math.floor(seconds/60);
+  let s = seconds % 60;
+  timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  roundEl.textContent = isRest ? "Отдых" : "Раунд " + currentRound;
+}
+
+// таймер
 function tick() {
-  // 🔊 бипы в последние 10 секунд
+
+  // 🔊 бипы последние 10 сек
   if (seconds <= 10 && seconds > 0) {
     beep.currentTime = 0;
     beep.play();
@@ -150,6 +97,8 @@ function tick() {
   if (seconds > 0) {
     seconds--;
   } else {
+
+    // 🔔 гонг
     gong.currentTime = 0;
     gong.play();
 
@@ -160,55 +109,46 @@ function tick() {
       isRest = false;
       currentRound++;
 
-      if (currentRound > roundsTotal) {
+      if (currentRound > totalRounds) {
         clearInterval(interval);
-        timerElement.textContent = "00:00";
-        roundElement.textContent = translations[langSelect.value].finished;
+        timerEl.textContent = "00:00";
+        roundEl.textContent = "Бой окончен!";
         return;
       }
 
       seconds = roundTime;
     }
 
+    // 🔔 ещё один гонг
     gong.currentTime = 0;
     gong.play();
   }
 
-  updateDisplay();
+  update();
 }
 
-startBtn.onclick = () => {
+// кнопки
+document.getElementById("start").onclick = () => {
+  unlockAudio(); // важно!
   if (!interval) interval = setInterval(tick, 1000);
 };
 
-stopBtn.onclick = () => {
+document.getElementById("stop").onclick = () => {
   clearInterval(interval);
   interval = null;
 };
 
-resetBtn.onclick = () => {
+document.getElementById("reset").onclick = () => {
   clearInterval(interval);
   interval = null;
   currentRound = 1;
   isRest = false;
   seconds = roundTime;
-  updateDisplay();
+  update();
 };
 
-roundsSelect.onchange = () => {
-  roundsTotal = +roundsSelect.value;
-};
+update();
 
-colorSelect.onchange = () => {
-  document.body.style.color = colorSelect.value;
-};
-
-document.getElementById("settingsBtn").onclick = () => {
-  const panel = document.getElementById("settingsPanel");
-  panel.style.display = panel.style.display === "flex" ? "none" : "flex";
-};
-
-updateDisplay();
 </script>
 
 </body>
