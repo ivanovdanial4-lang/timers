@@ -296,10 +296,17 @@ langSelect.addEventListener("change", () => {
 update();
 updateLanguage();
   
-  let totalRounds = 5;
+// сначала объявляешь переменные
+let totalRounds = 5;
+
+// потом получаешь элементы
 const roundSelect = document.getElementById("roundSelect");
 
-  roundSelect.addEventListener("change", () => {
+// потом функции
+function update() {}
+
+// и только потом обработчики
+roundSelect.addEventListener("change", () => {
   totalRounds = parseInt(roundSelect.value);
 });
 
