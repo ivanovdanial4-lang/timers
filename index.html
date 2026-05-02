@@ -255,9 +255,16 @@ button:active { transform: scale(0.97); }
     <div class="stitle" id="lbl-sound-hdr">ЗВУК</div>
     <label id="lbl-sound">Тип звука</label>
     <select id="soundSelect">
+        <option value="danilevsky" id="opt-danilevsky">Данилевский</option>
         <option value="bell" id="opt-bell">Боксёрский гонг</option>
         <option value="buzzer" id="opt-buzzer">Зуммер</option>
         <option value="retro" id="opt-retro">Ретро 8-бит</option>
+        <option value="deep" id="opt-deep">Глубокий гонг</option>
+        <option value="military" id="opt-military">Военный горн</option>
+        <option value="whistle" id="opt-whistle">Судейский свисток</option>
+        <option value="siren" id="opt-siren">Сирена</option>
+        <option value="church" id="opt-church">Церковный колокол</option>
+        <option value="laser" id="opt-laser">Лазер</option>
     </select>
     <button id="testSoundBtn" style="width:100%;margin-top:8px;font-size:14px;padding:7px;">&#9654; ТЕСТ</button>
 
@@ -295,37 +302,51 @@ const TR = {
           cRed:"RED", cGreen:"GREEN", cYellow:"YELLOW", cCyan:"CYAN", cWhite:"WHITE", cOrange:"ORANGE",
           lang:"ЯЗЫК", rounds:"РАУНДЫ", roundsLbl:"Количество раундов", time:"ВРЕМЯ", prepLbl:"Подготовка (сек)",
           workLbl:"Раунд (мин)", restLbl:"Отдых (сек)", sound:"ЗВУК", soundLbl:"Тип звука", color:"ЦВЕТ",
-          bell:"Боксёрский гонг", buzzer:"Зуммер", retro:"Ретро 8-бит", test:"ТЕСТ", title:"БОЙ!" },
+          danilevsky:"Данилевский", bell:"Боксёрский гонг", buzzer:"Зуммер", retro:"Ретро 8-бит",
+          deep:"Глубокий гонг", military:"Военный горн", whistle:"Судейский свисток",
+          siren:"Сирена", church:"Церковный колокол", laser:"Лазер", test:"ТЕСТ", title:"БОЙ!" },
     en: { round:"ROUND", rest:"REST", prep:"PREPARE", end:"FIGHT OVER!", start:"START", stop:"STOP", reset:"RESET",
           cRed:"RED", cGreen:"GREEN", cYellow:"YELLOW", cCyan:"CYAN", cWhite:"WHITE", cOrange:"ORANGE",
           lang:"LANGUAGE", rounds:"ROUNDS", roundsLbl:"Number of rounds", time:"TIME", prepLbl:"Prep time (sec)",
           workLbl:"Round time (min)", restLbl:"Rest time (sec)", sound:"SOUND", soundLbl:"Sound type", color:"COLOR",
-          bell:"Boxing bell", buzzer:"Buzzer", retro:"Retro 8-bit", test:"TEST", title:"FIGHT!" },
+          danilevsky:"Danilevsky", bell:"Boxing bell", buzzer:"Buzzer", retro:"Retro 8-bit",
+          deep:"Deep gong", military:"Military horn", whistle:"Referee whistle",
+          siren:"Siren", church:"Church bell", laser:"Laser", test:"TEST", title:"FIGHT!" },
     uk: { round:"РАУНД", rest:"ВІДПОЧИНОК", prep:"ПІДГОТОВКА", end:"БІЙ ЗАКІНЧЕНО!", start:"СТАРТ", stop:"СТОП", reset:"СКИДАННЯ",
           cRed:"RED", cGreen:"GREEN", cYellow:"YELLOW", cCyan:"CYAN", cWhite:"WHITE", cOrange:"ORANGE",
           lang:"МОВА", rounds:"РАУНДИ", roundsLbl:"Кількість раундів", time:"ЧАС", prepLbl:"Підготовка (сек)",
           workLbl:"Раунд (хв)", restLbl:"Відпочинок (сек)", sound:"ЗВУК", soundLbl:"Тип звуку", color:"КОЛІР",
-          bell:"Боксерський гонг", buzzer:"Зумер", retro:"Ретро 8-біт", test:"ТЕСТ", title:"БІЙ!" },
+          danilevsky:"Данілевський", bell:"Боксерський гонг", buzzer:"Зумер", retro:"Ретро 8-біт",
+          deep:"Глибокий гонг", military:"Військовий горн", whistle:"Суддівський свисток",
+          siren:"Сирена", church:"Церковний дзвін", laser:"Лазер", test:"ТЕСТ", title:"БІЙ!" },
     cs: { round:"KOLO", rest:"ODPOČINEK", prep:"PŘÍPRAVA", end:"KONEC ZÁPASU!", start:"START", stop:"STOP", reset:"RESET",
           cRed:"RED", cGreen:"GREEN", cYellow:"YELLOW", cCyan:"CYAN", cWhite:"WHITE", cOrange:"ORANGE",
           lang:"JAZYK", rounds:"KOLA", roundsLbl:"Počet kol", time:"ČAS", prepLbl:"Příprava (sek)",
           workLbl:"Kolo (min)", restLbl:"Odpočinek (sek)", sound:"ZVUK", soundLbl:"Typ zvuku", color:"BARVA",
-          bell:"Boxerský gong", buzzer:"Bzučák", retro:"Retro 8-bit", test:"TEST", title:"BOJ!" },
+          danilevsky:"Danilevský", bell:"Boxerský gong", buzzer:"Bzučák", retro:"Retro 8-bit",
+          deep:"Hluboký gong", military:"Vojenský roh", whistle:"Rozhodčí píšťalka",
+          siren:"Siréna", church:"Kostelní zvon", laser:"Laser", test:"TEST", title:"BOJ!" },
     pl: { round:"RUNDA", rest:"PRZERWA", prep:"PRZYGOTOWANIE", end:"KONIEC WALKI!", start:"START", stop:"STOP", reset:"RESET",
           cRed:"RED", cGreen:"GREEN", cYellow:"YELLOW", cCyan:"CYAN", cWhite:"WHITE", cOrange:"ORANGE",
           lang:"JĘZYK", rounds:"RUNDY", roundsLbl:"Liczba rund", time:"CZAS", prepLbl:"Przygotowanie (sek)",
           workLbl:"Runda (min)", restLbl:"Przerwa (sek)", sound:"DŹWIĘK", soundLbl:"Typ dźwięku", color:"KOLOR",
-          bell:"Gong bokserski", buzzer:"Brzęczyk", retro:"Retro 8-bit", test:"TEST", title:"WALKA!" },
+          danilevsky:"Danilevsky", bell:"Gong bokserski", buzzer:"Brzęczyk", retro:"Retro 8-bit",
+          deep:"Głęboki gong", military:"Wojskowy róg", whistle:"Gwizdek sędziego",
+          siren:"Syrena", church:"Dzwon kościelny", laser:"Laser", test:"TEST", title:"WALKA!" },
     de: { round:"RUNDE", rest:"PAUSE", prep:"VORBEREITUNG", end:"KAMPF BEENDET!", start:"START", stop:"STOP", reset:"RESET",
           cRed:"RED", cGreen:"GREEN", cYellow:"YELLOW", cCyan:"CYAN", cWhite:"WHITE", cOrange:"ORANGE",
           lang:"SPRACHE", rounds:"RUNDEN", roundsLbl:"Rundenanzahl", time:"ZEIT", prepLbl:"Vorbereitung (Sek)",
           workLbl:"Runde (Min)", restLbl:"Pause (Sek)", sound:"SOUND", soundLbl:"Soundtyp", color:"FARBE",
-          bell:"Boxglocke", buzzer:"Buzzer", retro:"Retro 8-Bit", test:"TEST", title:"KAMPF!" },
+          danilevsky:"Danilevsky", bell:"Boxglocke", buzzer:"Buzzer", retro:"Retro 8-Bit",
+          deep:"Tiefer Gong", military:"Militärhorn", whistle:"Schiedsrichterpfeife",
+          siren:"Sirene", church:"Kirchenglocke", laser:"Laser", test:"TEST", title:"KAMPF!" },
     es: { round:"ASALTO", rest:"DESCANSO", prep:"PREPARACIÓN", end:"¡COMBATE TERMINADO!", start:"INICIO", stop:"PARAR", reset:"REINICIAR",
           cRed:"RED", cGreen:"GREEN", cYellow:"YELLOW", cCyan:"CYAN", cWhite:"WHITE", cOrange:"ORANGE",
           lang:"IDIOMA", rounds:"ASALTOS", roundsLbl:"Número de asaltos", time:"TIEMPO", prepLbl:"Preparación (seg)",
           workLbl:"Asalto (min)", restLbl:"Descanso (seg)", sound:"SONIDO", soundLbl:"Tipo de sonido", color:"COLOR",
-          bell:"Gong de boxeo", buzzer:"Zumbador", retro:"Retro 8-bits", test:"PROBAR", title:"¡PELEA!" }
+          danilevsky:"Danilevsky", bell:"Gong de boxeo", buzzer:"Zumbador", retro:"Retro 8-bits",
+          deep:"Gong profundo", military:"Corneta militar", whistle:"Silbato del árbitro",
+          siren:"Sirena", church:"Campana de iglesia", laser:"Láser", test:"PROBAR", title:"¡PELEA!" }
 };
 
 function getT() { return TR[document.getElementById('langSelect').value]; }
@@ -337,25 +358,93 @@ function initAudio() {
 function playBell(type) {
     if (!audioCtx) return;
     const ct = audioCtx.currentTime;
-    if (type === 'bell') {
-        [[880,440,0.8],[1320,660,0.4]].forEach(([f1,f2,vol]) => {
+
+    if (type === 'danilevsky') {
+        // Original from the first code: simple sine gong beep(200, 0.6)
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.type = 'sine'; o.frequency.value = 200;
+        g.gain.setValueAtTime(0.8, ct); g.gain.exponentialRampToValueAtTime(0.001, ct + 0.6);
+        o.connect(g); g.connect(audioCtx.destination); o.start(ct); o.stop(ct + 0.6);
+
+    } else if (type === 'bell') {
+        // Boxing bell — rich metallic ring
+        [[880,440,0.8],[1320,660,0.4],[2200,1100,0.2]].forEach(([f1,f2,vol]) => {
             const o = audioCtx.createOscillator(), g = audioCtx.createGain();
             o.type = 'sine'; o.frequency.setValueAtTime(f1,ct); o.frequency.exponentialRampToValueAtTime(f2,ct+1.0);
-            g.gain.setValueAtTime(vol,ct); g.gain.exponentialRampToValueAtTime(0.001,ct+1.8);
-            o.connect(g); g.connect(audioCtx.destination); o.start(ct); o.stop(ct+1.8);
+            g.gain.setValueAtTime(vol,ct); g.gain.exponentialRampToValueAtTime(0.001,ct+2.0);
+            o.connect(g); g.connect(audioCtx.destination); o.start(ct); o.stop(ct+2.0);
         });
+
     } else if (type === 'buzzer') {
+        // Electric buzzer — harsh sawtooth
         const o = audioCtx.createOscillator(), g = audioCtx.createGain();
         o.type = 'sawtooth'; o.frequency.value = 110;
         g.gain.setValueAtTime(0.7,ct); g.gain.setValueAtTime(0.7,ct+0.55); g.gain.linearRampToValueAtTime(0,ct+0.7);
         o.connect(g); g.connect(audioCtx.destination); o.start(ct); o.stop(ct+0.7);
-    } else {
+
+    } else if (type === 'retro') {
+        // 8-bit ascending chime
         [0,0.14,0.28].forEach((d,i) => {
             const o = audioCtx.createOscillator(), g = audioCtx.createGain();
             o.type = 'square'; o.frequency.value = [523,659,784][i];
             g.gain.setValueAtTime(0.3,ct+d); g.gain.setValueAtTime(0,ct+d+0.12);
             o.connect(g); g.connect(audioCtx.destination); o.start(ct+d); o.stop(ct+d+0.13);
         });
+
+    } else if (type === 'deep') {
+        // Deep temple gong — low resonant boom
+        [[80,40,0.9],[160,80,0.5],[240,120,0.2]].forEach(([f1,f2,vol]) => {
+            const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.type = 'sine'; o.frequency.setValueAtTime(f1,ct); o.frequency.exponentialRampToValueAtTime(f2,ct+1.5);
+            g.gain.setValueAtTime(vol,ct); g.gain.exponentialRampToValueAtTime(0.001,ct+2.5);
+            o.connect(g); g.connect(audioCtx.destination); o.start(ct); o.stop(ct+2.5);
+        });
+
+    } else if (type === 'military') {
+        // Military horn — bugle call fanfare
+        const notes = [[392,0],[494,0.18],[587,0.36],[494,0.54],[392,0.72],[294,0.90]];
+        notes.forEach(([freq,d]) => {
+            const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.type = 'triangle'; o.frequency.value = freq;
+            g.gain.setValueAtTime(0,ct+d); g.gain.linearRampToValueAtTime(0.5,ct+d+0.04);
+            g.gain.setValueAtTime(0.5,ct+d+0.14); g.gain.linearRampToValueAtTime(0,ct+d+0.17);
+            o.connect(g); g.connect(audioCtx.destination); o.start(ct+d); o.stop(ct+d+0.18);
+        });
+
+    } else if (type === 'whistle') {
+        // Referee whistle — sharp high burst
+        [0, 0.22, 0.44].forEach(d => {
+            const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.type = 'sine'; o.frequency.setValueAtTime(3200,ct+d); o.frequency.linearRampToValueAtTime(3600,ct+d+0.16);
+            g.gain.setValueAtTime(0.6,ct+d); g.gain.linearRampToValueAtTime(0,ct+d+0.16);
+            o.connect(g); g.connect(audioCtx.destination); o.start(ct+d); o.stop(ct+d+0.17);
+        });
+
+    } else if (type === 'siren') {
+        // Siren — rising and falling wail
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.type = 'sawtooth';
+        o.frequency.setValueAtTime(300,ct); o.frequency.linearRampToValueAtTime(900,ct+0.4);
+        o.frequency.linearRampToValueAtTime(300,ct+0.8); o.frequency.linearRampToValueAtTime(900,ct+1.2);
+        o.frequency.linearRampToValueAtTime(300,ct+1.6);
+        g.gain.setValueAtTime(0.5,ct); g.gain.setValueAtTime(0.5,ct+1.5); g.gain.linearRampToValueAtTime(0,ct+1.7);
+        o.connect(g); g.connect(audioCtx.destination); o.start(ct); o.stop(ct+1.7);
+
+    } else if (type === 'church') {
+        // Church bell — slow deep toll with harmonics
+        [[220,110,0.7],[440,220,0.4],[660,330,0.2],[880,440,0.15]].forEach(([f1,f2,vol],i) => {
+            const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.type = 'sine'; o.frequency.setValueAtTime(f1,ct+i*0.02); o.frequency.exponentialRampToValueAtTime(f2,ct+2.0);
+            g.gain.setValueAtTime(vol,ct+i*0.02); g.gain.exponentialRampToValueAtTime(0.001,ct+3.0);
+            o.connect(g); g.connect(audioCtx.destination); o.start(ct+i*0.02); o.stop(ct+3.0);
+        });
+
+    } else if (type === 'laser') {
+        // Laser — sci-fi descending zap
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.type = 'square'; o.frequency.setValueAtTime(1800,ct); o.frequency.exponentialRampToValueAtTime(100,ct+0.4);
+        g.gain.setValueAtTime(0.4,ct); g.gain.exponentialRampToValueAtTime(0.001,ct+0.45);
+        o.connect(g); g.connect(audioCtx.destination); o.start(ct); o.stop(ct+0.45);
     }
 }
 
@@ -363,9 +452,22 @@ function beepTick(type) {
     if (!audioCtx) return;
     const ct = audioCtx.currentTime;
     const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-    o.type = type === 'retro' ? 'square' : type === 'buzzer' ? 'sawtooth' : 'sine';
-    o.frequency.value = type === 'buzzer' ? 700 : type === 'retro' ? 880 : 1100;
-    g.gain.setValueAtTime(0.35,ct); g.gain.linearRampToValueAtTime(0,ct+0.07);
+    // Each sound has its own tick character
+    const configs = {
+        danilevsky: ['sine', 800, 0.1],
+        bell:       ['sine', 1100, 0.35],
+        buzzer:     ['sawtooth', 700, 0.3],
+        retro:      ['square', 880, 0.25],
+        deep:       ['sine', 180, 0.5],
+        military:   ['triangle', 660, 0.3],
+        whistle:    ['sine', 3000, 0.4],
+        siren:      ['sawtooth', 600, 0.3],
+        church:     ['sine', 440, 0.4],
+        laser:      ['square', 1200, 0.25],
+    };
+    const [wt, freq, vol] = configs[type] || configs.bell;
+    o.type = wt; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, ct); g.gain.linearRampToValueAtTime(0, ct+0.07);
     o.connect(g); g.connect(audioCtx.destination); o.start(ct); o.stop(ct+0.08);
 }
 
